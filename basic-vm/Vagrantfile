@@ -4,12 +4,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	#BOX
 	config.vm.box = "centos/7"
 	#config.vm.box_url = "https://url.to.box"
+	
+	#HARDWARE
+	config.vm.provider "virtualbox" do |v|
+		v.name = "basicVM"
+		v.memory = 2048
+		v.cpus = 2
+	end
   
 	#SHARED FOLDERS
-	config.vm.synced_folder ".", "/vagrant"
+	config.vm.synced_folder ".", "/home/vagrant/sync"
 	#config.vm.synced_folder "/Users/michael/assets/" "/var/www/assets"
   
 	#PORT FORWARDING
-	config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+	config.vm.network "forwarded_port", guest: 80, host: 8080,  id: "www"
 	
 end
