@@ -1,22 +1,71 @@
+#-------------------------------------------------------------
+# HINTS
+#-------------------------------------------------------------
+
+# Make sure virtual box guest editions is installed on guest
+## execute on host: vagrant plugin install vagrant-vbguest
+
+# Make sure puppet is includes in the base box or install manually
+##
+
+#-------------------------------------------------------------
+# PARAMETERS
+#-------------------------------------------------------------
 VAGRANTFILE_API_VERSION = "2"
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+VM_NAME = "basicVM"
+VM_MEMORY_MB = 2048
+VM_CPUS = 2
+VM_HARDDISK_FORAT = "VDI"
+VM_HARDDISK_SIZE = 30 * 1024
+VM_HARDDISK_NAME = "home.vdi"
+
+SYNC_FOLDER_A_SOURCE = "."
+SYNC_FOLDER_A_TARGET = "/home/vagrant/sync"
+
+PUPPET_MANIFEST_FILE = "default.pp"
+PUPPET_MANIFEST_PATH = "provision/puppet/manifests"
+PUPPET_MANIFEST_MODULES = "provision/puppet/modules"
+
+INIT_SCRIPT = "provision/puppet/manifests/init.sh"
+INCLUDE_MODULES = "provision/puppet/manifests/modules.sh"
+
+#-------------------------------------------------------------
+# SETUP
+#-------------------------------------------------------------
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |general|
 
 	#BOX
-	config.vm.box = "centos/7"
-	#config.vm.box_url = "https://url.to.box"
+	general.vm.box = "centos/7"
+	#general.vm.box_url = "https://url.to.box"
 	
-	#HARDWARE
-	config.vm.provider "virtualbox" do |v|
-		v.name = "basicVM"
-		v.memory = 2048
-		v.cpus = 2
+	#PROVIDER (Virtualbox)
+	general.vm.provider "virtualbox" do |vb|
+		vb.name = VM_NAME
+		vb.memory = VM_MEMORY_MB
+		vb.cpus = VM_CPUS
 	end
   
 	#SHARED FOLDERS
-	config.vm.synced_folder ".", "/home/vagrant/sync"
-	#config.vm.synced_folder "/Users/michael/assets/" "/var/www/assets"
+	general.vm.synced_folder SYNC_FOLDER_A_SOURCE, SYNC_FOLDER_A_TARGET
   
 	#PORT FORWARDING
-	config.vm.network "forwarded_port", guest: 80, host: 8080,  id: "www"
+	general.vm.network "forwarded_port", guest: 80, host: 8080,  id: "www", auto_correct:true
+	
+	#PROVISIONING
+	general.vm.provision "shell", path: INIT_SCRIPT
+	general.vm.provision "shell", path: INCLUDE_MODULES
+	
+	general.vm.provision "puppet" do |puppet|
+		puppet.manifests_path = PUPPET_MANIFEST_PATH
+		puppet.manifest_file = PUPPET_MANIFEST_FILE
+		puppet.module_path = PUPPET_MANIFEST_MODULES
+	end
+end
+
+#-------------------------------------------------------------
+# OPTIONAL
+#-------------------------------------------------------------
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |optional|
 	
 end
