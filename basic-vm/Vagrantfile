@@ -50,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |general|
 	general.vm.synced_folder SYNC_FOLDER_A_SOURCE, SYNC_FOLDER_A_TARGET
   
 	#PORT FORWARDING
-	general.vm.network "forwarded_port", guest: 80, host: 8080,  id: "www", auto_correct:true
+	general.vm.network "forwarded_port", guest: 80, host: 8080,  id: "www"
 	
 	#PROVISIONING
 	general.vm.provision "shell", path: INIT_SCRIPT

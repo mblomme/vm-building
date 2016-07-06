@@ -1,11 +1,8 @@
 # Default puppet manifest
 
-# mandatory packages
-notify{"INSTALLING MANDATORY PACKAGES":}
-notify{"Installing: vim":}
-class { 'vim': }
+include basic::tools
 
-notify{"Installing: wget":}
-package { "wget":
-  ensure => "installed",
-}
+include basic::setup
+
+include java_development
+
