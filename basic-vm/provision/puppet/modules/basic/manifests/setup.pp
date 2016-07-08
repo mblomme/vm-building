@@ -2,11 +2,8 @@ class basic::setup {
 
 	notice("Disabling firewall & SELinux")
 	
-	service { 'iptables':
+	service { 'firewalld':
 	    enable => false,
 	}
 	
-	service { 'ip6tables':
-	    enable => false,
-	}
 }

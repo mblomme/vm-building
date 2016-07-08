@@ -2,13 +2,11 @@ class basic::tools {
 
 	notice("installing mandatory packages")
 	
-	notice("installing Vim")
+	notice("Installing Vim")
 	class { 'vim': }
 	
-	notice("install wget")
-	package { "wget":
-	  ensure => "installed",
-	}
-
+	notice("Installing wget")
+  include wget
+  
 }
 

@@ -1,8 +1,4 @@
 # Default puppet manifest
 
-include basic::tools
-
-include basic::setup
-
+include basic
 include java_development
-
